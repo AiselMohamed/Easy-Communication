@@ -1,7 +1,7 @@
 <?php
 SESSION_START();
 include('chat.php');
-$hostName = "localhost:3307";
+$hostName = "localhost";
 $dbUser = "root";
 $dbPassword = "";
 $dbName = "chat_system";

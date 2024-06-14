@@ -2,7 +2,7 @@
 
 class Chat
 {
-	private $host  = 'localhost:3307';
+	private $host  = 'localhost';
 	private $user  = 'root';
 	private $password   = "";
 	private $database  = "chat_system";
