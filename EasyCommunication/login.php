@@ -126,6 +126,40 @@ if (empty($_SESSION['userid'])) {
 		<link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 		<link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
 		<link rel="stylesheet" href="login.css">
+		<style>
+		input[type="file"] {
+  display: none;
+}
+
+.custom-file-input {
+  padding: 17px 0px;
+  border: none;
+  color:#495c81;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+input[type="file"]::after {
+  content: attr(value);
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 14px;
+  color: #333;
+}
+select.form-control.p_input{
+	background-color: transparent;
+    border: none;
+	margin-left: -6px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+select.form-control.p_input:focus{
+	outline: none;
+}
+</style>
 	</head>
 
 	<body>
@@ -181,30 +215,115 @@ if (empty($_SESSION['userid'])) {
 						</div>
 						<div class="input-field">
 							<i class="ri-earth-line"></i>
-							<input type="text" name="country" placeholder="Country" class="form-control  p_input">
+							<!-- <input type="text" name="country" placeholder="Country" class="form-control  p_input"> -->
+							<!-- <i class="caret-down-fill"></i> -->
+
+							<select name="country" class="form-control  p_input" style="color: #495c81;">
+							    <option label="Country"></option>
+								<option value="Armenia">Armenia</option>
+								<option value="af" >Albania</option>
+								<option>America</option>
+								<option>Australia</option>
+                                <option>Bahrain</option><option>Bulgaria</option><option>Brazil</option>
+                                <option value="China">China</option><option value="Canada">Canada</option>
+                                <option>Denmark</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="France">France</option>
+                                <option>Greece</option><option value="Germany">Germany</option>
+                                <option>Hong Kong</option><option>Hawaii</option>
+								<option>India</option><option>Iceland</option><option>Ireland</option><option>Italy</option><option>Iran</option>
+                                <option>Japan</option>
+                                <option>Korea</option><option>Kuwait</option>
+                                <option>Luxembourg</option><option>Lebanon</option>
+								<option>Mauritania</option><option>Morocco</option><option>Malaysia</option><option>Macau</option><option>Mongolia</option>
+                                <option>Norway</option><option>North Macedonia</option><option>Netherlands</option><option>New Zealand</option>
+                                <option>Oman</option>
+								<option>Palestine</option><option>Poland</option><option>Philippines</option>
+                                <option>Qatar</option>
+								<option>Romania</option><option>Russia</option><option>Romania</option>
+								<option>South Africa</option><option>Somalia</option><option>Sudan</option><option>Serbia</option><option>Singapore</option><option>Somalia</option><option>Spain</option><option>Sweden</option>
+                                <option>Tanzania</option><option>Taiwan</option><option>Tunisia</option><option>Thailand</option><option>Turkey</option>
+								<option>Ukraine</option><option value="United States">United States</option><option>Ukraine</option><option>United Kingdom</option>
+								<option>Vietnam</option><option>Vatican</option>
+		
+							</select>
 						</div>
+
 						<div class="input-field">
 							<i class="ri-global-line"></i>
-							<input type="text" name="main-language" placeholder="Main Language" class="form-control  p_input">
+							<!-- <input type="text" name="main-language" placeholder="Main Language" class="form-control  p_input" style="border: none;"> -->
+
+							<!-- <i class="caret-down-fill"></i> -->
+
+							<select name="main-language" class="form-control  p_input" style="color: #495c81;"  >		
+												<option label="Main Language"></option>
+							<option value="af">Afrikaans</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hy">Armenian</option>
+                            <option value="bg">Bulgarian</option>
+                            <option value="zh-CN">Chinese(Simplified)</option>
+                            <option value="zh-TW">Chinese(Traditional)	</option>
+                            <option value="cs">Czech</option>
+                            <option value="da">Danish</option>
+                            <option value="nl">Dutch</option>
+							<option value="en">English</option>
+							<option value="fil">Filipino</option>
+							<option value="fr">French</option>
+							<option value="de">German</option>
+							<option value="el">Greek</option>
+							<option value="haw">Hawaiian</option>
+							<option value="hi">Hindi</option>
+							<option value="is">Icelandic</option>
+							<option value="ga">Irish</option>
+							<option value="it">Italian</option>
+							<option value="ja">Japanese</option>
+							<option value="kn">Kannada</option>
+							<option value="ko">Korean</option>
+							<option value="la">Latin</option>
+							<option value="mn">Mongolian</option>
+							<option value="my">Myanmar</option>
+							<option value="no">Norwegian</option>
+							<option value="fa">Persian</option>
+							<option value="pl">Polish</option>
+							<option value="pt">Portuguese</option>
+							<option value="ro">Romanian</option>
+							<option value="ru">Russian</option>
+							<option value="so">Somali</option>
+							<option value="es">Spanish</option>
+							<option value="sv">Swedish</option>
+							<option value="tr">Turkish</option>
+							<option value="uk">Ukrainian</option>
+							<option value="vi">Vietnamese</option>
+						
+                            </select>
 						</div>
 						<div class="input-field">
 							<i class='bx bxs-lock-alt'></i>
 							<input type="password" name="password" placeholder="Password" class="form-control  p_input">
-							<div  style="position: fixed;top: 0;left: 0;height: 127%;z-index: 9999;display: flex;justify-content: center;align-items: center;">
-							<small style=" padding: 131px; font-size: 11px; display: block; max-width: 100%; box-sizing: border-box;">
-                            <?= (isset($errors['password'])) ? $errors['password'] : null; ?></small>
-                        </div>
+							
 						</div>
+						<div style=" width: 350px;
+    line-height: 0.8;
+    margin: -6px 0;
+"><small style=" font-size: 11px;">
+						<?= (isset($errors['password'])) ? $errors['password'] : null; ?></small></div>
 						<div class="input-field">
-							<i class='bx bxs-alt '></i>
-							<input type="file" name="img" placeholder="image" class="form-control  p_input" style=" border: none; margin: 11px 64px 0; font-size: 21px; color: #cac9c9;">
+						<i class='bx bx-camera' id="img"></i>
+							<label for="file-input" class="custom-file-input">Image</label>
+
+							<input type="file" name="img" id="file-input" class="profile-input" style=" 
+			border:none; margin:10px 0 0; font-size: 22px;
+			font-weight: 600;
+			color:#000;">
+							<!-- <input type="file" name="img" placeholder="image" class="form-control  p_input" style=" border: none; margin: 11px 64px 0; font-size: 21px; color: #cac9c9;"> -->
 							<small><?= (isset($errors['upload'])) ? $errors['upload'] : null; ?></small>
+							<small ><?= (isset($errors['ex'])) ? $errors['ex'] : null; ?></small>
+							<small style="width: 365px;
+    text-align: center;"><?= (isset($errors['all-input'])) ? $errors['all-input'] : null; ?></small>
+							<small><?= (isset($errors['error'])) ? $errors['error'] : null; ?></small>
 						</div>
 						<div class="button input">
-						<small ><?= (isset($errors['ex'])) ? $errors['ex'] : null; ?></small>
-							<small><?= (isset($errors['all-input'])) ? $errors['all-input'] : null; ?></small>
-							<small><?= (isset($errors['error'])) ? $errors['error'] : null; ?></small>
-							</br>
+					
 							<button type="submit" name="register" class="btn btn-primary btn-block enter-btn">Signup</button>
 						</div>
 						<p class="social-text">Or sign in with social platforms</p>

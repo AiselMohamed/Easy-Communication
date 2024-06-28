@@ -1,4 +1,7 @@
 <?php
+require_once 'vendor/autoload.php';
+
+use Stichoza\GoogleTranslate\GoogleTranslate;
 session_start();
 include('header.php');
 clearstatcache();
@@ -25,7 +28,8 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 
 <link href="css/css.css" rel="stylesheet" id="bootstrap-css">
 <link rel="stylesheet" href="tailwindcss-colors.css">
-<link rel="stylesheet" href="css/css.css">
+<!-- <link rel="stylesheet" href="css/css.css"> -->
+<title>Easy Communication</title>
 <style>
 	.modal-dialog {
 		width: 400px;
@@ -64,7 +68,6 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 						</a>
 						<ul class="chat-sidebar-menu">
 							<li id="chat-menu" class="menu-active"><a href="#" id="Chats" data-title="Chats"><i id="Chats" class="ri-chat-3-line"></i></a></li>
-
 
 							<li id="update-info"><a href="#" id="profile-info" data-title="profile"><i id="profile-info" class="ri-user-line"></i></a></li>
 							<li><a href="logout.php" id="logout" data-title="logout"><i class="ri-logout-box-line"></i></a></li>
@@ -178,8 +181,10 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 														<span class="content-message-info">
 															<span class="content-message-name"><?= $user['username'] ?></span>
 
-															<span class="content-message-text" id="content-message-text-<?= $user['userid'] ?>"><?php
-																																				echo 	$message_time[1];
+															<span class="content-message-text" id="content-message-text-<?= $user['userid'] ?>"><?php 
+															$fromUsers = $chat->getUserDetails($_SESSION['userid']);
+															$toUsers = $chat->getUserDetails($user['userid']);
+															echo  GoogleTranslate::trans($message_time[1],$fromUsers[0]['mainlanguage'] , $toUsers[0]['mainlanguage']);
 																																				?></span>
 															<p class="preview"><span id="isTyping_<?= $user['userid'] ?>" class="isTyping"></span></p>
 
@@ -245,7 +250,9 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 									<div class="desc_profile" id="div-lang_profile">
 										<p class="about">MainLanguage</p>
 										<div class="desc_edit">
-											<p><?= $chatUsers[0]['mainlanguage'] ?></p>
+											<p><?php
+											$lang=['ar'=>'Arabic','en'=>'English','fr'=>'French','de'=>'Germany','zh-CN'=>'China'];
+											echo $lang[$chatUsers[0]['mainlanguage']]?></p>
 											<i class='bx bx-pencil' id="lang_profile"></i>
 										</div>
 									</div>
@@ -283,6 +290,7 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 								echo $chat->getUserChat($_SESSION['userid'], $currentSession);
 								?>
 							</div>
+							
 							<div class="message-input" id="replySection">
 								<div class="message-input" id="replyContainer">
 									<div class="conversation-form">
@@ -303,7 +311,7 @@ if (isset($_POST['update-username']) && !empty($_POST['update-username'])) {
 						</div>
 			</section>
 			<!-- end: Chat -->
-			<script src="script.js"></script>
+			<!-- <script src="script.js"></script> -->
 			<script src="js/chats.js"></script>
 			<script>
 				document.querySelector('emoji-picker')

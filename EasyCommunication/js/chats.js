@@ -1,16 +1,20 @@
 
 $(document).ready(function () {
+	// setInterval(function () {
+	 
+	// 	updatelist()
+	// 	showTypingStatus();
+	// 	updateUserChatsearch()
+	// }, 1000);//miliseconde 1s=1000ms
 	setInterval(function () {
-		updateUserList();
+		// updateUserList();
 		updateUnreadMessageCount();
 		updateUnreadMessage();
-		updatelist()
-	}, 5000);
-	setInterval(function () {
+		updatelist();
 		showTypingStatus();
-
 		updateUserChatsearch()
-	}, 1000);
+	}, 1000);//miliseconde 1s=1000ms
+	
 	$(".messages").animate({
 		scrollTop: $(document).height()
 	}, "fast");
@@ -24,9 +28,81 @@ $(document).ready(function () {
 		$("#emoji").toggleClass("active");
 
 	});
+	// open profile section from sidebar and hide users
+	$(document).on('click', '#profile-info', function () {
+		$("#sidepanel").css("display", "none");
+		$("#sidepanel-profile").css("display", "block");
+		$('#chat-menu').removeClass('menu-active');
+		$('#update-info').addClass('menu-active');
+	});
+	// open chat users from sidebar and hide profile section
+	$(document).on('click', '#Chats', function () {
+		$("#sidepanel").css("display", "block");
+		$("#sidepanel-profile").css("display", "none");
+		$('#update-info').removeClass('menu-active');
+		$('#chat-menu').addClass('menu-active');
+	});
+	// profile js
+	$(document).on('click', '#name_profile', function () {
+		let profile = "name_profile";
+		getuser(profile);
+	})
+	$(document).on('click', '#country_profile', function () {
+		let profile = "country_profile";
+		getuser(profile);
+	})
+	$(document).on('click', '#lang_profile', function () {
+		let profile = "lang_profile";
+		getuser(profile);
+	})
+	$(document).on('click', '#pass_profile', function () {
+		let profile = "pass_profile";
+		getuser(profile);
+	})
+
+	$(document).on('click', '#img_profile', function () {
+		let profile = "img_profile";
+		getuser(profile);
+	})
 
 
+	// profile js
+	// $(document).on('click', '.contact', function () {
+	// 	$('.contact').removeClass('active');
+	// 	$(this).addClass('active');
+	// 	var to_user_id = $(this).data('touserid');
+	// 	showUserChat(to_user_id);
+	// 	$(".chatMessage").attr('id', 'chatMessage' + to_user_id);
+	// 	$(".chatButton").attr('id', 'chatButton' + to_user_id);
+	// });
+	$(document).on('click','.new, .contact', function () {
+		$('.contact').removeClass('active');
+		$(this).addClass('active');
+		var to_user_id = $(this).attr('id');
+		showUserChat(to_user_id);
+		$(".chatMessage").attr('id', 'chatMessage' + to_user_id);
+		$(".chatButton").attr('id', 'chatButton' + to_user_id);
+	});
+	$(document).on("click", '.submit', function (event) {
+		var to_user_id = $(this).attr('id');
+		to_user_id = to_user_id.replace(/chatButton/g, "");
+		sendMessage(to_user_id);
+		fetchLastMessageTime(to_user_id);
+		scrollToBottom();
+	});
+function input(){
+	var submit_id = $(".submit").attr('id');
+	submit_id = submit_id.replace(/chatButton/g, "");
+// console.log(submit_id);
 
+if(submit_id == 0){
+	document.querySelector(".message-input").style.display = "none";
+}else if(submit_id != 0){
+	document.querySelector(".message-input").style.display = "block";
+
+}
+}
+input()
 
 	// 0=>offline
 	// 1=>online
@@ -34,10 +110,10 @@ $(document).ready(function () {
 	// 3=>away
 	$(document).on("click", '#status-options ul li', function (event) {
 		$("#profile-img").removeClass();
-		$("#status-online").removeClass("active");
-		$("#status-away").removeClass("active");
-		$("#status-busy").removeClass("active");
-		$("#status-offline").removeClass("active");
+		$("#status-online ,#status-busy,#status-offline,#status-away").removeClass("active");
+		// $("#status-away").removeClass("active");
+		// $("#status-busy").removeClass("active");
+		// $("#status-offline").removeClass("active");
 		$(this).addClass("active");
 		if ($("#status-online").hasClass("active")) {
 			$("#profile-img").addClass("online");
@@ -82,68 +158,7 @@ $(document).ready(function () {
 		$(".chat-sidebar-profile-toggle").removeClass("active");
 		$(".chat-sidebar-profile").removeClass("active");
 	});
-	// open profile section from sidebar and hide users
-	$(document).on('click', '#profile-info', function () {
-		$("#sidepanel").css("display", "none");
-		$("#sidepanel-profile").css("display", "block");
-		$('#chat-menu').removeClass('menu-active');
-		$('#update-info').addClass('menu-active');
-	});
-	// open chat users from sidebar and hide profile section
-	$(document).on('click', '#Chats', function () {
-		$("#sidepanel").css("display", "block");
-		$("#sidepanel-profile").css("display", "none");
-		$('#update-info').removeClass('menu-active');
-		$('#chat-menu').addClass('menu-active');
-	});
-	// profile js
-	$(document).on('click', '#name_profile', function () {
-		let profile = "name_profile";
-		getuser(profile);
-	})
-	$(document).on('click', '#country_profile', function () {
-		let profile = "country_profile";
-		getuser(profile);
-	})
-	$(document).on('click', '#lang_profile', function () {
-		let profile = "lang_profile";
-		getuser(profile);
-	})
-	$(document).on('click', '#pass_profile', function () {
-		let profile = "pass_profile";
-		getuser(profile);
-	})
-
-	$(document).on('click', '#img_profile', function () {
-		let profile = "img_profile";
-		getuser(profile);
-	})
-
-
-	// profile js
-	$(document).on('click', '.contact', function () {
-		$('.contact').removeClass('active');
-		$(this).addClass('active');
-		var to_user_id = $(this).data('touserid');
-		showUserChat(to_user_id);
-		$(".chatMessage").attr('id', 'chatMessage' + to_user_id);
-		$(".chatButton").attr('id', 'chatButton' + to_user_id);
-	});
-	$(document).on('click', '.new', function () {
-		$('.contact').removeClass('active');
-		$(this).addClass('active');
-		var to_user_id = $(this).attr('id');
-		showUserChat(to_user_id);
-		$(".chatMessage").attr('id', 'chatMessage' + to_user_id);
-		$(".chatButton").attr('id', 'chatButton' + to_user_id);
-	});
-	$(document).on("click", '.submit', function (event) {
-		var to_user_id = $(this).attr('id');
-		to_user_id = to_user_id.replace(/chatButton/g, "");
-		sendMessage(to_user_id);
-		fetchLastMessageTime(to_user_id);
-		scrollToBottom();
-	});
+	
 	$(document).on('focus', '.conversation-form-input', function () {
 		var is_type = 'yes';
 		$.ajax({
@@ -165,6 +180,7 @@ $(document).ready(function () {
 		});
 	});
 });
+
 var searchBar = document.querySelector(".content-sidebar-input");
 const searchBtn = document.querySelector(".content-sidebar-input button");
 var userList = document.querySelector(".users-list");
@@ -174,6 +190,7 @@ searchBar.addEventListener("focus", () => {
 	userList.style.display = "block";
 	intervalId = setInterval(function () {
 		search();
+		console.log("here");
 	}, 1000);
 	intervalId
 });
@@ -189,11 +206,10 @@ searchBar.addEventListener("blur", () => {
 	});
 });
 
-
 function search() {
 	var value = searchBar.value;
 	test = $(`.users-list`);
-
+ console.log(value)
 	$.ajax({
 		url: 'chat_action.php',
 		method: 'POST',
@@ -202,6 +218,8 @@ function search() {
 		success: function (data) {
 			// Update the HTML content with the last message time
 			test.html(data.message)
+ 
+
 		},
 		error: function (xhr, status, error) {
 			console.error('Error search:', error);
@@ -212,15 +230,15 @@ function search() {
 
 }
 function getuser(profile) {
-	$.ajax({
-		url: 'chat_action.php',
-		method: 'POST',
-		data: { action: 'get-user', profile: profile },
-		dataType: 'json',
-		success: function (data) {
+	// $.ajax({
+	// 	url: 'chat_action.php',
+	// 	method: 'POST',
+	// 	data: { action: 'get-user', profile: profile },
+	// 	dataType: 'json',
+	// 	success: function (data) {
 			// Update the HTML content with the last message time
-			if (data["profile"] == "name_profile") {
-				console.log(data["profile"]);
+			if (profile == "name_profile") {
+				console.log(profile);
 
 				$("#div-name_profile").replaceWith
 					(`<div class="name_profile" id="div-name_profile" style=" 
@@ -233,10 +251,10 @@ function getuser(profile) {
 		    <input name="update-username" class="profile-input" type="text" style=" 
 		    border:none; margin:10px 0 0; font-size: 22px;
 		    font-weight: 600;
-		    color:#000;" value="`+ data["message"][0]['username'] + `">
+		    color:#000;" >
 		    <button  style="border:none; background-color:white;" type='submit' ><i style="font-size: 23px;" class='bx bx-check' id="save-name_profile"></i></button></form>`
 					)
-			} else if (data["profile"] == "country_profile") {
+			} else if (profile == "country_profile") {
 				$("#div-country_profile").replaceWith
 					(`                     <p class="about">Country</p>
 					<div class="desc_profile" id="div-country_profile" style=" 
@@ -247,11 +265,40 @@ function getuser(profile) {
 					display: flex;
 					justify-content: space-between;
 				">
-				<input name="update-country" class="profile-input" type="text" style=" 
+				
+				<select name="update-country" style=" 
 				border:none;  font-size: 19px;
-                color:#000;" value="`+ data["message"][0]['country'] + `">
+                color:#000;" class="form-control  p_input" style="color: #495c81;">
+							    <option label="choose country"></option>
+								<option value="Armenia">Armenia</option>
+								<option>Albania</option>
+								<option value="America">America</option>
+								<option>Australia</option>
+                                <option>Bahrain</option><option>Bulgaria</option><option>Brazil</option>
+                                <option value="China">China</option><option value="Canada">Canada</option>
+                                <option>Denmark</option>
+                                <option value="Egypt">Egypt</option>
+                                <option value="France">France</option>
+                                <option>Greece</option><option value="Germany">Germany</option>
+                                <option>Hong Kong</option><option>Hawaii</option>
+								<option>India</option><option>Iceland</option><option>Ireland</option><option>Italy</option><option>Iran</option>
+                                <option>Japan</option>
+                                <option>Korea</option><option>Kuwait</option>
+                                <option>Luxembourg</option><option>Lebanon</option>
+								<option>Mauritania</option><option>Morocco</option><option>Malaysia</option><option>Macau</option><option>Mongolia</option>
+                                <option>Norway</option><option>North Macedonia</option><option>Netherlands</option><option>New Zealand</option>
+                                <option>Oman</option>
+								<option>Palestine</option><option>Poland</option><option>Philippines</option>
+                                <option>Qatar</option>
+								<option>Romania</option><option>Russia</option><option>Romania</option>
+								<option>South Africa</option><option>Somalia</option><option>Sudan</option><option>Serbia</option><option>Singapore</option><option>Somalia</option><option>Spain</option><option>Sweden</option>
+                                <option>Tanzania</option><option>Taiwan</option><option>Tunisia</option><option>Thailand</option><option>Turkey</option>
+								<option>Ukraine</option><option value="United States">United States</option><option>Ukraine</option><option>United Kingdom</option>
+								<option>Vietnam</option><option>Vatican</option>
+		
+							</select>
 				<button  style="border:none; background-color:white;" type='submit' ><i style="font-size: 23px;" class='bx bx-check' id="save-country_profile"></i></button></form>`)
-			} else if (data["profile"] == "lang_profile") {
+			} else if (profile == "lang_profile") {
 				$("#div-lang_profile").replaceWith
 					(`                     <p class="about">MainLanguage</p>
 				<div class="desc_profile" id="div-lang_profile" style=" 
@@ -262,13 +309,53 @@ function getuser(profile) {
 				display: flex;
 				justify-content: space-between;
 			">
-			<input name="update-lang" class="profile-input" type="text" style=" 
-			border:none; margin-bottom:0px;   font-size: 19px;
 			
-			color:#000;" value="`+ data["message"][0]['mainlanguage'] + `">
+			<select name="update-lang" class="profile-input" type="text" style=" 
+			border:none; margin-bottom:0px;   font-size: 19px;
+			color:#000;" >		
+												<option label="choose language"></option>
+							<option value="af">Afrikaans</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hy">Armenian</option>
+                            <option value="bg">Bulgarian</option>
+                            <option value="zh-CN">Chinese(Simplified)</option>
+                            <option value="zh-TW">Chinese(Traditional)	</option>
+                            <option value="cs">Czech</option>
+                            <option value="da">Danish</option>
+                            <option value="nl">Dutch</option>
+							<option value="en">English</option>
+							<option value="fil">Filipino</option>
+							<option value="fr">French</option>
+							<option value="de">German</option>
+							<option value="el">Greek</option>
+							<option value="haw">Hawaiian</option>
+							<option value="hi">Hindi</option>
+							<option value="is">Icelandic</option>
+							<option value="ga">Irish</option>
+							<option value="it">Italian</option>
+							<option value="ja">Japanese</option>
+							<option value="kn">Kannada</option>
+							<option value="ko">Korean</option>
+							<option value="la">Latin</option>
+							<option value="mn">Mongolian</option>
+							<option value="my">Myanmar</option>
+							<option value="no">Norwegian</option>
+							<option value="fa">Persian</option>
+							<option value="pl">Polish</option>
+							<option value="pt">Portuguese</option>
+							<option value="ro">Romanian</option>
+							<option value="ru">Russian</option>
+							<option value="so">Somali</option>
+							<option value="es">Spanish</option>
+							<option value="sv">Swedish</option>
+							<option value="tr">Turkish</option>
+							<option value="uk">Ukrainian</option>
+							<option value="vi">Vietnamese</option>
+						
+                            </select>
 			<button  style="border:none; background-color:white;" type='submit' ><i style="font-size: 23px;" class='bx bx-check' id="save-lang_profile"></i></button></form>`)
 
-			} else if (data["profile"] == "img_profile") {
+			} else if (profile == "img_profile") {
 				$("#img-form").append
 					(`
 				<button  style="border:none; background-color:transparent;  
@@ -277,8 +364,8 @@ function getuser(profile) {
             top: 135px;" name="update-img" type='submit' ><i style="font-size: 30px;" class='bx bx-check' id="save-img_profile"></i></button>`)
 
 			}
-			else if (data["profile"] == "pass_profile") {
-				let count = data["message"][0]['password'].length
+			else if (profile == "pass_profile") {
+				// let count = data["message"][0]['password'].length
 				$("#div-pass_profile").replaceWith
 					(` 		<p class="about">Password</p>
 			<form method="post" style="
@@ -303,16 +390,16 @@ function getuser(profile) {
 									color:#000;" placeholder="Enter your new password">
 						
 			<button  style="border:none; background-color:white;" type='submit' ><i style="font-size: 23px;" class='bx bx-check' id="save-pass-profile"></i></button></div></form>`)
-			}
-		},
-		error: function (xhr, status, error) {
-			console.error('Error get user:', error);
-		}
-	}
+			}}
+		// },
+		// error: function (xhr, status, error) {
+		// 	console.error('Error get user:', error);
+		// }
+// 	}
 
-	);
+// 	);
 
-}
+// }
 function scrollToBottom() {
 	var messageDiv = document.getElementById('conversation');
 	var scrollHeight = messageDiv.scrollHeight;
@@ -394,6 +481,7 @@ function sendMessage(to_user_id) {
 	if ($.trim(message) == '') {
 		return false;
 	}
+	console.log("resp")
 
 	$.ajax({
 		url: "chat_action.php",
@@ -403,6 +491,7 @@ function sendMessage(to_user_id) {
 		success: function (response) {
 			var resp = $.parseJSON(response);
 			$('#conversation').html(resp.conversation);
+			console.log(resp.conversation)
 			$(".messages").animate({ scrollTop: $('.messages').height() }, "fast");
 		}
 	});
@@ -422,6 +511,7 @@ function showUserChat(to_user_id) {
 }
 function updateUserChat() {
 	$('li.contact.active').each(function () {
+		input()
 		var to_user_id = $(this).attr('data-touserid');
 		$.ajax({
 			url: "chat_action.php",

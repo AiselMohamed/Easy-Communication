@@ -1,5 +1,7 @@
 <?php
+require_once 'vendor/autoload.php';
 
+use Stichoza\GoogleTranslate\GoogleTranslate;
 class Chat
 {
 	private $host  = 'localhost';
@@ -77,10 +79,14 @@ class Chat
 				} elseif ($user['online'] == 3) {
 					$active = "away";
 				}
+				$active_array=[0=>'offline',1=>'online',2=>'busy',3=>'away'];
+				$active=$active_array[$user['online']];
 				$activeUser = '';
 				if ($user['userid'] == $currentSession) {
 					$activeUser = "active";
 				}
+				$fromUsers = $this->getUserDetails($receiver_id);
+		$toUsers = $this->getUserDetails($sender_id);
 				$list .= '<li id="' . $user['userid'] . '" class="contact ' . $activeUser . '" data-touserid="' . $user['userid'] . '" data-tousername="' . $user['username'] . '">';
 				$list .= '<div class="content-messages">
 		<ul class="content-messages-list">
@@ -91,7 +97,7 @@ class Chat
 					<img class="content-message-image" src="/EasyCommunication/image/' . $user['img'] . '" alt="" />
 					<span class="content-message-info">
 						<span class="content-message-name">' . $user['username'] . '</span>
-						<span class="content-message-text" id="content-message-text-' . $user['userid'] . '">' . $message_time[1] . '	</span>		
+						<span class="content-message-text" id="content-message-text-' . $user['userid'] . '">' . GoogleTranslate::trans( $message_time[1],$fromUsers[0]['mainlanguage'] , $toUsers[0]['mainlanguage']) . '	</span>		
 						<p class="preview"><span id="isTyping_' . $user['userid'] . '" class="isTyping"></span></p>
 					</span>
 					<span class="content-message-more">
@@ -157,13 +163,16 @@ class Chat
 	}
 	public function getUserChat($from_user_id, $to_user_id)
 	{
+		$fromUsers = $this->getUserDetails($_SESSION['userid']);
+		$toUsers = $this->getUserDetails($to_user_id);
+
 		$fromUserAvatar = $this->getUserAvatar($from_user_id);
 		$toUserAvatar = $this->getUserAvatar($to_user_id);
 		$sqlQuery = "SELECT * FROM " . $this->chatTable . " WHERE (sender_userid = '" . $from_user_id . "' AND reciever_userid = '" . $to_user_id . "') OR (sender_userid = '" . $to_user_id . "' 
 			AND reciever_userid = '" . $from_user_id . "') ORDER BY timestamp ASC";
 		$userChat = $this->getData($sqlQuery);
 		$conversation = '<ul>';
-		foreach ($userChat as $chat) {
+		foreach ($userChat as $chat) { 
 			$user_name = '';
 			if ($chat["sender_userid"] == $from_user_id) {
 				$conversation .= '<li class="sent">';
@@ -172,7 +181,8 @@ class Chat
 				$conversation .= '<li class="replies">';
 				$conversation .= '<img width="22px" height="22px" src="/EasyCommunication/image/' . $toUserAvatar . '" alt="" />';
 			}
-			$conversation .= '<p>' . $chat["message"];
+			$conversation .= '<p>' .GoogleTranslate::trans($chat["message"],$fromUsers[0]['mainlanguage'] , $toUsers[0]['mainlanguage']);
+			;
 			$time = (empty($chat["timestamp"])) ? null : $chat["timestamp"];
 			$time_without_seconds = date("g:i A", strtotime($time));
 			$conversation .= '<br>';
@@ -304,7 +314,9 @@ class Chat
 		$row = mysqli_fetch_assoc($result);
 		$time = (empty($row['last_message_time'])) ? null : $row['last_message_time'];
 		$time_without_seconds = date("g:i A", strtotime($time));
-		$message = '<span class="content-message-text" id="content-message-text-' . $sender_id . '">' . $row['message'] . '</span>';
+		$fromUsers = $this->getUserDetails($receiver_id);
+		$toUsers = $this->getUserDetails($sender_id);
+		$message = '<span class="content-message-text" id="content-message-text-' . $sender_id . '">' .GoogleTranslate::trans( $row['message'],$fromUsers[0]['mainlanguage'] , $toUsers[0]['mainlanguage']) . '</span>';
 		$time = '<span class="content-message-time" id="last-message-time-' . $sender_id . '">' . $time_without_seconds . '</span>';
 		$data = array(
 			"last_message_time" => $time,
@@ -334,15 +346,18 @@ class Chat
 		$rows = []; // Initialize an array to store all matching rows
 		// Loop through the result set and fetch all rows
 		$message = '';
+		// $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 		while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
 			$rows[] = $row; // Append each row to the array
-			$message .= '<a href="#" class="new" id="' . $row['userid'] . '">
+			$lang=['ar'=>'arabic','en'=>'english','fr'=>'french','de'=>'Germany','zh-CN'=>'China'];
+
+			$message .= '<a href="#" class="new" id="' . $row['userid'] . '" touserid="' . $row['userid'] . '">
 			<div class="cont">
 				<img src="image/' . $row['img'] . '" alt="">
 				<div class="details">
 					<span class="user">' . $row['username'] . '</span>
 					<span>' . $row['country'] . '</span>
-					<span>' . $row['mainlanguage'] . '</span>
+					<span>' . $lang[$row['mainlanguage']] . '</span>
 					<p>' . $row['email'] . '</p>
 				</div>
 			</div>

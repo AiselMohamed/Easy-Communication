@@ -52,7 +52,7 @@ if ($_POST['action'] == 'last-message-time') {
 
 if ($_POST['action'] == 'search') {
 	if (!empty($_POST['search'])) {
-		$search = $chat->search($_POST['search']);
+		 $chat->search($_POST['search']);
 	}
 }
 
@@ -68,9 +68,9 @@ if ($_POST['action'] == 'update_status') {
 	}
 }
 if ($_POST["action"] == "get-user") {
-	$message = $chat->getUserDetails($_SESSION['userid']);
+	// $message = $chat->getUserDetails($_SESSION['userid']);
 	$data = array(
-		"message" => $message,
+		// "message" => $message,
 		"profile" => $_POST["profile"]
 	);
 	echo json_encode($data);
